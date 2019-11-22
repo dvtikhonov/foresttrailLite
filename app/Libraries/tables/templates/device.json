@@ -1,0 +1,86 @@
+{
+  "routePrefix": "device",
+  "dataRouteSuffix": "data",
+  "method": "POST",
+  "buttons": [
+    {
+      "type": "global",
+      "icon": "filter",
+      "class": "is-outlined",
+      "event": "toggle-filters",
+      "label": "Filters"
+    },
+    {
+      "type": "global",
+      "icon": "plus",
+      "class": "is-outlined",
+      "event": "row-create",
+      "label": "Create"
+    },
+
+    {
+      "type": "row",
+      "icon": "eye",
+      "class": "row-show",
+      "event": "row-show"
+    },
+    {
+      "type": "row",
+      "icon": "pencil-alt",
+      "class": "edit",
+      "event": "row-edit"
+    },
+    {
+      "type": "row",
+      "icon": "trash-alt",
+      "class": "is-naked",
+      "event": "destroy",
+      "confirmation" : true,
+      "message" : "Delete row?"
+    }
+  ],
+  "columns": [
+    {
+      "label": "ID",
+      "name": "dtRowId",
+      "data": "dtRowId",
+      "meta": ["sortable"]
+    },
+    {
+      "label": "Name",
+      "name": "name",
+      "data": "devices.name",
+      "meta": ["sortable", "searchable"]
+    },
+    {
+      "label": "Alias",
+      "name": "alias",
+      "data": "alias",
+      "meta": ["sortable", "searchable"]
+    },
+    {
+      "label": "IMEI",
+      "name": "imei",
+      "data": "imei",
+      "meta": ["sortable", "searchable"]
+    },
+    {
+      "label": "Options",
+      "name": "options",
+      "data": "options",
+      "meta": ["sortable", "searchable"]
+    },
+    {
+      "label": "PosName",
+      "name": "provider_pos_name",
+      "data": "provider_pos.name",
+      "meta": ["sortable", "searchable"]
+    },
+    {
+      "label": "TariffName",
+      "name": "tariff_name",
+      "data": "device_tariffs.name",
+      "meta": ["sortable", "searchable"]
+    }
+  ]
+}
