@@ -15,6 +15,7 @@ class Form extends Page
 
     /**
      * Get the URL for the page.
+     * Form Provider
      *
      * @return string
      */
@@ -56,11 +57,6 @@ class Form extends Page
             ->type('@Phone', '881212312490')
             ->type('@Login', '9133310802LL')
             ->type('@Password', '12345678');
-//        $browser->type('@Address', '308434, Мурманская область, город Сергиев Посад, наб. Ломоносова, 69');
-//        $browser->type('@Contacts', 'Василий Кузьмич');
-//        $browser->type('@Phone', '881212312490');
-//        $browser->type('@Login', '9133310802LL');
-//        $browser->type('@Password', '12345678');
     }
 
     public function closeWinSaveText(Browser $browser)
@@ -84,10 +80,16 @@ class Form extends Page
             ->assertDontSee('Тарифы')
         ;
     }
-        public function checkUpdateProviderInfo(Browser $browser)
+
+    /**
+     * @param Browser $browser
+     * @throws \Facebook\WebDriver\Exception\TimeOutException
+     */
+    public function checkUpdateProviderInfo(Browser $browser)
 
     {
         $browser
+            ->waitUntilMissing('@Loader')
             ->type('@Password', '')
             ->assertDontSee('Запись сохраненна')
             ->press('Сохранить')
@@ -96,11 +98,13 @@ class Form extends Page
             ->assertDontSee('The address field is required')
             ->assertDontSee('The contacts field is required')
             ->assertDontSee('The phone field is required')
-//            ->screenshot('Exampl_Login_in181')
+            ->screenshot('Exampl_Login_in181')
             ->type('@Password', '12345678')
             ->press('Сохранить')
-            ->waitForText('Запись сохраненна')
-
+            ->waitForText('Ошибка - Request failed with status code 400',10)
+            ->type('@Login', '913331080277')
+            ->press('Сохранить')
+            ->waitForText('Запись сохраненна',10)
             ->type('@Name', ' ')
             ->press('Сохранить')
             ->waitForText('The name field is required')
@@ -140,22 +144,11 @@ class Form extends Page
             ->assertDontSee('The name field is required')
             ->assertDontSee('The address field is required')
             ->assertDontSee('The contacts field is required')
-//            ->screenshot('Exampl_Login_in181')
             ->type('@Phone', '881212312490')
-            ->press('Сохранить')
-            ->waitForText('Запись сохраненна')
-
-            ->type('@Login', ' ')
-//            ->assertDontSee('Запись сохраненна')
-            ->press('Сохранить')
-            ->waitForText('Ошибка - Request failed with status code 400')
-//            ->screenshot('Exampl_Login_in181')
-            ->type('@Login', '881212312490')
             ->press('Сохранить')
             ->waitForText('Запись сохраненна')
         ;
     }
-
     /**
      * Get the element shortcuts for the page.
      *
@@ -164,6 +157,7 @@ class Form extends Page
     public function elements()
     {
         return [
+            '@Loader'  => 'div.loading-background',
             '@Password' => 'form > div:nth-child(4) > div:nth-child(2) > div > input',
             '@Login' => 'form > div:nth-child(4) > div:nth-child(1) > div > input',
             '@Phone' => 'form > div:nth-child(3) > div:nth-child(2) > div > input',

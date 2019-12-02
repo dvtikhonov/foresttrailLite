@@ -71,7 +71,8 @@ class ProviderPosList extends Page
             ->waitForText('записей')
 
             ->press('Создать') //
-            ->waitForText('точка POS',10)
+            ->waitUntilMissing('@Loader',10) // есть еще div.overlay-loader
+            ->waitForText('Слои',10)
             ->assertDontSee('Ошибка')
             ->assertDontSee('Запись сохраненна')
         ;
@@ -174,8 +175,6 @@ class ProviderPosList extends Page
      *  Инициалтзация устройств для тестов  Точки продаж.
      *
      * @param  Browser $browser
-     * @param  $device
-     * @param  $deviceName
      * @return void
      * @throws \Facebook\WebDriver\Exception\TimeOutException
      */
@@ -227,13 +226,13 @@ class ProviderPosList extends Page
     }
 
     /**
-     *  Удаление устройств из базы.
+     *  Удаление Точки продажи  из базы.
      *
      * @param  Browser $browser
      * @param  $imei
      * @return void
      */
-    public function deletTestDevice(Browser $browser,$imei=null )
+    public function deletPos(Browser $browser )
     {
         $pos = ProviderPos::query()
             ->where('provider_id', 2)
@@ -252,10 +251,20 @@ class ProviderPosList extends Page
                 ->where('phone', '881212312491')
                 ->where('minimum_balance', '25')
                 ->update(['deleted_at' => date('Y-m-d H:i:s')]);
-            dump('Pos - '.$pos.'rows updated' );
+            dump('Pos - ' . $pos . 'rows updated');
         }
+        return;
+    }
+    /**
+     *  Удаление устройств из базы.
+     *
+     * @param  Browser $browser
+     * @param  $imei
+     * @return void
+     */
+    public function deletTestDevice(Browser $browser,$imei=null )
+    {
         return DeviceListTest::trashedDeleteDevice($imei);
-
 }
     /**
      *  проверка кнопки Точки продаж на странице Устройства.
@@ -290,7 +299,7 @@ class ProviderPosList extends Page
             ->clickLink('Редактирование')
             ->waitForText('Провайдер id: '.$this->user_id)
         ;
-}
+    }
 
     /**
      *  проверка удаления Точки продаж.
@@ -315,35 +324,13 @@ class ProviderPosList extends Page
             ->waitForText('Подтвердите')
             ->assertSee('Удалить запись?')
             ->press('Да')
-            ->pause(1000)
+            ->pause(1700)
             ->waitUntilMissing('@LoaderRed') // есть еще div.overlay-loader
             ->waitForText('ID')
             ->assertSee('Нет данных')
         ;
-}
-
-    /**
-     *  поиск  Точки продаж.
-     *
-     * @param  Browser $browser
-     * @param $find
-     * @return void
-     * @throws \Facebook\WebDriver\Exception\TimeOutException
-     */
-    public function findProviderPos(Browser $browser, $find =null)
-
-    {
-        $browser
-            ->clickLink('Точки продаж')
-            ->waitForText('ID')
-            ->type('div.search-input input.input', $find)
-             ->pause(250)
-            ->waitForText('Телефон')
-            ->assertSee('881212312491')
-            ->assertSee('Иван Кузьмич')
-            ->assertSee('308434, Мурманская область, город Сергиев Посад, наб. Ломоносова, 28а')
-        ;
     }
+
 
 //   Неудачный эксперемент по TreeSelect
 //->click('@Select')
@@ -391,7 +378,6 @@ class ProviderPosList extends Page
             '@DeviceSelect' => 'form > div:nth-child(1) > div:nth-child(2) > div > div.vue-treeselect__menu-container > div label',// можно в консоли выполнить temp1.openMenu(), где temp1 глобально сохраненный контекст области openMenu
             '@SelrctST910' => 'form .select-device .vue-treeselect__list .vue-treeselect__option:not(.vue-treeselect__option--hide):last',// можно в консоли выполнить temp1.openMenu(), где temp1 глобально сохраненный контекст области openMenu
             '@SelrctST911' => 'form .select-device .vue-treeselect__list .vue-treeselect__option:not(.vue-treeselect__option--hide):first',
-//            '@SelrctST910' => 'form > div:nth-child(1) > div:nth-child(2) > div > div.vue-treeselect__menu-container > div > div > div:nth-child(1) > div > div > label',
             '@SelectInput' => 'form > div:nth-child(1) > div:nth-child(2) > div > div.vue-treeselect__control > div.vue-treeselect__value-container > div > div.vue-treeselect__input-container > input ', // input.vue-treeselect__input
             '@Select' => 'form > div:nth-child(1) > div:nth-child(2) > div > div.vue-treeselect__control > div.vue-treeselect__control-arrow-container',
             '@MinBalans' => 'form > div:nth-child(4) > div:nth-child(1) > div > input',

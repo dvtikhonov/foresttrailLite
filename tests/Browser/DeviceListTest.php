@@ -21,6 +21,8 @@ class DeviceListTest extends DuskTestCase
      */
     public function testDeviceList()
     {
+//        $user = User::find(1);
+//        dd(User::find(6), $user);
 
         $this->browse(function (Browser $browser) {
             $browser
@@ -34,8 +36,12 @@ class DeviceListTest extends DuskTestCase
                 ->type('#inputPassword', '12345678')
                 ->press('Вход')
                 ->visit('app#/manager/devices/')
-                ->waitForText('Admin')
-                ->waitUntilMissing('div.loading-background')
+                ->waitForText('Admin',10)
+//                ->screenshot('Exampl_Login_in8')
+//                ->press('Устройства')
+                ->waitUntilMissing('div.loading-background') // есть еще div.overlay-loader
+//                ->clickLink('a[href="http://foresttrail.loc/app#/manager/devices/"]')
+//                ->waitForLink('Устройства', 10)
                 ->waitForText('IMEI')
                 ->waitFor('li.breadcrumb-item.active')
                 ->assertVue('breadcrumbList[0].text', 'Устройства', '@breadcrumb-component')
@@ -58,14 +64,6 @@ class DeviceListTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
 
-//                ->visit('/')
-//                ->visit('app#/')
-//                ->type('#inputEmail', '9133310802')
-//                ->type('#inputPassword', '12345678')
-//                ->press('Вход')
-//                ->visit('app#/manager/devices/')
-//                ->waitForText('IMEI')
-//                ->assertVue('breadcrumbList[0].text', 'Устройства', '@breadcrumb-component')
                 ->type('div.search-input input.input', 'TESTST901')
                 ->waitForText('IMEI')
 //                ->pause(500)
@@ -89,17 +87,8 @@ class DeviceListTest extends DuskTestCase
             $device->forceDelete();
             dump ('Dedleted imei,35686800004141120 ');
         }
-
-
         $this->browse(function (Browser $browser) {
             $browser
-//                ->visit('/')
-//                ->visit('app#/')
-//                ->type('#inputEmail', '9133310802')
-//                ->type('#inputPassword', '12345678')
-//                ->press('Вход')
-//                ->visit('app#/manager/devices/')
-//                ->waitForText('IMEI')
 
 
                 ->press('Создать')
@@ -116,12 +105,23 @@ class DeviceListTest extends DuskTestCase
                 ->assertSee('The alias field is required')
                 ->assertSee('The imei field is required')
                 ->assertDontSee('Ошибка - Request')
+//                ->pause(500)
+//                ->assertSee('Ошибка - Request failed with status code 400')
                 ->type('form > div:nth-child(1) > div > div > input', 'GSM gps трекер ST-901')
+//                ->press('Сохранить')
+//                ->waitForText('Ошибка - Request failed with status code 400') //35686800-004141-1-20
                 ->type('form > div:nth-child(2) > div:nth-child(1) > div > input', 'TESTST901')
+//                ->press('Сохранить')
+//                ->waitForText('Ошибка - Request failed with status code 400') //35686800-004141-1-20
                 ->type('form > div:nth-child(2) > div:nth-child(2) > div > input', 'ТЕСТ.Подлежит удалению.Мини водонепроницаемый Встроенный аккумулятор GSM gps трекер ST-901 для автомобиля мотоцикла 3g WCDMA устройство с программное обеспечение для онлайн отслеживания')
+//                ->press('Сохранить')
+//                ->waitForText('Ошибка - Request failed with status code 400') //35686800-004141-1-20
+//                ->pause(2000)
                 ->click('form > div:nth-child(3) > div:nth-child(2) > div > div.vue-treeselect__control > div.vue-treeselect__control-arrow-container')
                 ->waitForText('Fish1')
                 ->click('form > div:nth-child(3) > div:nth-child(2) > div > div.vue-treeselect__menu-container > div > div > div:nth-child(2) > div > div > label')
+//                ->press('Сохранить')
+//                ->waitForText('Ошибка - Request failed with status code 400') //35686800-004141-1-20
                 ->type('form > div:nth-child(3) > div:nth-child(1) > div > input', '35686800004141120')
                 ->press('Сохранить')
                 ->waitForText('Запись сохраненна')
@@ -134,7 +134,7 @@ class DeviceListTest extends DuskTestCase
     }
 
     /**
-     * A Dusk test формы  создания  устройства.
+     * A Dusk test формы  изменения  устройства.
      *
      * @depends testCreateDevice
      * @return void
@@ -145,25 +145,22 @@ class DeviceListTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-//                ->visit('/')
-//                ->visit('app#/')
-//                ->type('#inputEmail', '9133310802')
-//                ->type('#inputPassword', '12345678')
-//                ->press('Вход')
-//                ->visit('app#/manager/devices/')
-//                ->waitForText('IMEI',10)
-//                ->press('Создать')
-//                ->waitForText('IMEI')
 
 
+//                ->press('Отмена')
                 ->click('#app > div > ol > li:nth-child(1) > a')
+//                ->visit('app#/manager/devices/')
                 ->waitForText('IMEI')
                 ->type('div.search-input input.input', 'TESTST901')
                 ->waitForText('TESTST901')
+//                ->pause(500)
                 ->assertSee('ST-901')
                 ->clickLink('', '.button.edit:has(.fa-pencil-alt)')// пиктограмма карандаш, текста ссылки нет
+//                ->click('#id > tbody > tr > td.table-actions > span > a.button.is-small.is-table-button.has-margin-left-small.is-row-button > span > svg') // пиктограмма корзина
+//                ->pause(500)
 
                 ->waitForText('IMEI')
+//                ->screenshot('Exampl_Login_in19')
                 ->assertSeeIn('#app > div > ol > li.breadcrumb-item.active > span', 'Редактирование')
                 ->assertVue('breadcrumbList[0].text', 'Устройства', '@breadcrumb-component')
                 ->assertVue('breadcrumbList[1].text', 'Редактирование', '@breadcrumb-component')
@@ -172,6 +169,8 @@ class DeviceListTest extends DuskTestCase
                 ->waitUntilMissing('div.loading-background') // @Loader
                 ->press('Сохранить')
                 ->waitForText('Запись сохраненна')
+//                ->pause(500)
+//                ->assertSee('Ошибка - Request failed with status code 400')
                 ->type('form > div:nth-child(1) > div > div > input', 'GSM gps трекер ST-9011')
                 ->press('Сохранить')
                 ->waitForText('Запись сохраненна')
@@ -190,6 +189,7 @@ class DeviceListTest extends DuskTestCase
                 ->type('form > div:nth-child(2) > div:nth-child(2) > div > input', 'ТЕСТ.Подлежит удалению.Мини водонепроницаемый Встроенный аккумулятор GSM gps трекер ST-901 для автомобиля мотоцикла 3g WCDMA устройство с программное обеспечение для онлайн отслеживания')
                 ->press('Сохранить')
                 ->waitForText('Запись сохраненна')
+//                ->pause(2000)
                 ->click('form > div:nth-child(3) > div:nth-child(2) > div > div.vue-treeselect__control > div.vue-treeselect__control-arrow-container')
                 ->waitForText('Fish1')
                 ->click('form > div:nth-child(3) > div:nth-child(2) > div > div.vue-treeselect__menu-container > div > div > div:nth-child(2) > div > div > label')
@@ -208,7 +208,7 @@ class DeviceListTest extends DuskTestCase
     }
 
     /**
-     * A Dusk test формы  создания  устройства.
+     * A Dusk test формы  удаления  устройства.
      *
      * @depends testCreateDevice
      * @return void
@@ -219,21 +219,12 @@ class DeviceListTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-//                ->visit('/')
-//                ->visit('app#/')
-//                ->type('#inputEmail', '9133310802')
-//                ->type('#inputPassword', '12345678')
-//                ->press('Вход')
-//                ->visit('app#/manager/devices/')
-//                ->waitForText('IMEI',10)
-//                ->press('Создать')
-
-
                 ->clickLink('Отмена')
                 ->waitForText('IMEI')
 
                 ->type('div.search-input input.input', 'TESTST901')
                 ->waitForText('ST-901')
+//                ->pause(500)
                 ->waitUntilMissing('div.overlay-loader') // есть еще div.overlay-loader = @LoaderRed
                 ->assertSee('ST-901')
                 ->screenshot('Exampl_Login_in91')
@@ -251,6 +242,7 @@ class DeviceListTest extends DuskTestCase
                 ->waitForText('IMEI')
                 ->pause(1250)
                 ->assertDontSee('ST-901')
+//                ->screenshot('Exampl_Login_in9')
                 ->assertSeeIn('#app > div > ol > li.breadcrumb-item.active > span', 'Устройства')
                 ->assertVue('breadcrumbList[0].text', 'Устройства', '@breadcrumb-component')
             ;
@@ -261,6 +253,7 @@ class DeviceListTest extends DuskTestCase
             $device->forceDelete();
             dump ('Dedleted imei,35686800004141120 ');
         }
+//        dd(device);
 
     }
     public static function trashedDeleteDevice($imei)
