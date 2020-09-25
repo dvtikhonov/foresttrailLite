@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/bridge', 'StructuralPattrnsController@Bridge');
+
 Route::get('/app', function () {
     return view('app');
 })->name('app');

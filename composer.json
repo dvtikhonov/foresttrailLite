@@ -21,6 +21,7 @@
         "zircote/swagger-php": "^3.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.4",
         "barryvdh/laravel-ide-helper": "^2.6",
         "beyondcode/laravel-dump-server": "^1.0",
         "codeception/aspect-mock": "*",
